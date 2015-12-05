@@ -14,8 +14,8 @@ import com.google.zxing.common.reedsolomon.ReedSolomonException;
 
 public class Decoder_Thread extends Thread{
 	private char[] rdata = null;
-	private static int imgWidth=3264;
-	private static int imgHeight=2448;
+	private static int imgWidth=2448;
+	private static int imgHeight=3264;
 	final int framSize = imgWidth * imgHeight;
 	private Handler uihandler;
 	private int[] Data = null;

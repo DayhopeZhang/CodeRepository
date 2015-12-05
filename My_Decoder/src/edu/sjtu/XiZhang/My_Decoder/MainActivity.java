@@ -10,6 +10,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.PixelFormat;
 import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -21,6 +22,7 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import java.util.regex.*;
 
 public class MainActivity extends Activity implements SurfaceHolder.Callback{
 	
@@ -68,11 +70,23 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 					char[] data = mBundle.getCharArray("rdata");
 					result = new String(data);
 					
-					Intent s = new Intent(MainActivity.this, Result.class);
-					Bundle tmp = new Bundle();
-					tmp.putString("finalData",result);
-					s.putExtras(tmp);
-					startActivity(s);
+					//Judge whether the string is a URL
+					
+					if(result.matches("http(s*)://(.*)")){    // The result is a URL
+						Intent intent = new Intent();        
+				        intent.setAction("android.intent.action.VIEW");    
+				        Uri content_url = Uri.parse(result);   
+				        intent.setData(content_url);  
+				        startActivity(intent);
+						
+					}
+					else{  //The Result is a normal String
+						Intent s = new Intent(MainActivity.this, Result.class);
+						Bundle tmp = new Bundle();
+						tmp.putString("finalData",result);
+						s.putExtras(tmp);
+						startActivity(s);
+					}
 				}
 			}
 		};
@@ -126,7 +140,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 			
 			@Override
 			public void onPreviewFrame(byte[] data, Camera camera) {
-				Log.i("First Data Length", (String.valueOf(data.length)));
+				//Log.i("First Data Length", (String.valueOf(data.length)));
 				// TODO Auto-generated method stub
 				if(storeFlag){
 					storeFlag = false;
@@ -137,15 +151,15 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback{
 							//Log.i("ROW", String.valueOf(bitmap.getWidth()));
 							int[] pixels = new int[3264*2448];
 							bitmap.getPixels(pixels, 0, 2448, 0, 0, 2448, 3264);
-							int[] finalpixels = new int[2448*3264];
+							/*int[] finalpixels = new int[2448*3264];
 							for(int i=0;i<2448;++i){
 								for(int j=0;j<3264;++j){
 									finalpixels[i*3264+j] = pixels[j*2448+2447-i];
 								}
-							}
+							}*/
 							//Log.i("Second Data Length", (String.valueOf(pixels.length)));
 							//Log.i("TAG", "Entering Decode Thread!");
-							Decoder_Thread mThread = new Decoder_Thread(finalpixels,uiHandler);
+							Decoder_Thread mThread = new Decoder_Thread(pixels,uiHandler);
 							mThread.start();
 						}
 					});

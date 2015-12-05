@@ -9,6 +9,13 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_gravity="center" />
+        
+        <edu.sjtu.XiZhang.My_Decoder.ViewFinderView
+            android:id="@+id/view_finder_view"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center" 
+             />
 
         <Button
             android:id="@+id/cap_btn"

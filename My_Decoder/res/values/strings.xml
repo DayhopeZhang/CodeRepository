@@ -12,7 +12,7 @@
     <string name="inputText">colorNumber</string>
     <string name="myHint">请输入色彩数量</string>
     <string name="button">按钮</string>
-    <string name="capture">拍照</string>
-    <string name="scan_text">将二维码放入框内，即可自动扫描</string>
+    <string name="capture">Capture</string>
+    <string name="scan_text">Please put the encoded image into the rectangle</string>
 
 </resources>
