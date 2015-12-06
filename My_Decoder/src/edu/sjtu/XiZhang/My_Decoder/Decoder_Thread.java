@@ -1748,12 +1748,14 @@ public class Decoder_Thread extends Thread{
            	if(!f) break;
         }
         
-        int[] myinfo = new int[(q-2)*10];
+        int[] myinfo = new int[(q-1)*10];
         System.arraycopy(mybin,10,myinfo,0,myinfo.length);
         
         ReedSolomonDecoder decoder = new ReedSolomonDecoder(GenericGF.AZTEC_PARAM);
         int number =  myinfo.length/40;
-        int[] result = new int[myinfo.length/40*6];
+        int left = (myinfo.length % 40) / 10; 
+        
+        int[] result = new int[myinfo.length/40*6+left*2];
         int[] tmp = new int[8];
         
         for(int i=0;i<number;++i){
@@ -1773,6 +1775,13 @@ public class Decoder_Thread extends Thread{
 			}
         	System.arraycopy(tmp, 0, result, 6*i, 6);
         }
+        
+        int h = number*6;
+        for(int j = 0;j < left;++j){
+        	result[h++] = myinfo[40*number+10*j+2]*8 + myinfo[40*number+10*j+3]*4 + myinfo[40*number+10*j+4]*2 + myinfo[40*number+10*j+5];
+        	result[h++] = myinfo[40*number+10*j+6]*8 + myinfo[40*number+10*j+7]*4 + myinfo[40*number+10*j+8]*2 + myinfo[40*number+10*j+9];
+        }
+        
         char[] Final =  new char[result.length/2];
         for(int i = 0; i < Final.length;++i){
         	Final[i] = (char)(result[2*i]*16+result[2*i+1]);
